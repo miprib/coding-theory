@@ -6,6 +6,8 @@ using System;
 using System.Windows.Forms;
 using System.IO;
 using System.Drawing;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace KodavimoTeorijaA15
 {
@@ -30,13 +32,105 @@ namespace KodavimoTeorijaA15
             Console.SetOut(_writer);
         }
 
-        private void ButtonSendToChannel_Click(object sender, EventArgs e)
+        private void ButtonRunImage_Click(object sender, EventArgs e)
+        {
+            if (pictureBoxUploadedImage == null || pictureBoxUploadedImage.Image == null)
+            {
+                MessageBox.Show("Upload an image first");
+                return;
+            }
+
+            string binaryUserInput = BitUtils.ImageToBinaryString(pictureBoxUploadedImage.Image);
+
+            // ---------------------------------
+            string encoderOutput = _convolutionalEncoder.Encode(binaryUserInput);
+
+            _simpleChannel.SetNoiseLevel((double)numericUpDownNoiseLevel.Value);
+
+            int headerSize =
+                binaryUserInput.Length -
+                Image.GetPixelFormatSize(pictureBoxUploadedImage.Image.PixelFormat) * (pictureBoxUploadedImage.Image.Width * pictureBoxUploadedImage.Image.Height);
+
+            string channelOutput = _simpleChannel.AddNoise(encoderOutput, headerSize);
+            string decoderOutput = _convolutionalDecoder.Decode(channelOutput);
+
+            pictureBoxDecoderOutput.Image = BitUtils.BinaryStringToImage(decoderOutput);
+
+            // -----------------------------------
+            channelOutput = _simpleChannel.AddNoise(binaryUserInput, headerSize);
+            pictureBoxChannelOutput.Image = BitUtils.BinaryStringToImage(channelOutput);
+        }
+
+        private void ButtonRunText_Click(object sender, EventArgs e)
+        {
+            string binaryUserInput = BitUtils.StringToBinaryString(textBoxUserInput.Text);
+
+            //-----------
+            string encoderOutput = _convolutionalEncoder.Encode(binaryUserInput);
+
+            _simpleChannel.SetNoiseLevel((double)numericUpDownNoiseLevel.Value);
+            string channelOutput = _simpleChannel.AddNoise(encoderOutput, 0);
+            string decoderOutput = _convolutionalDecoder.Decode(channelOutput);
+
+            textBoxTextFromDecoder.Text = BitUtils.BinaryStringToString(decoderOutput);
+
+            //-----------
+            channelOutput = _simpleChannel.AddNoise(binaryUserInput, 0);
+            textBoxTextFromChannel.Text = BitUtils.BinaryStringToString(channelOutput);
+        }
+        /*
+        private void GetFullResult(string binaryUserInput)
+        {
+            string encoderOutput = _convolutionalEncoder.Encode(binaryUserInput);
+
+            _simpleChannel.SetNoiseLevel((int)numericUpDownNoiseLevel.Value);
+            string channelOutput = "";
+            if (radioButtonImage.Checked)
+            {
+                int headerSize =
+                    binaryUserInput.Length -
+                    Image.GetPixelFormatSize(pictureBoxUploadedImage.Image.PixelFormat) * (pictureBoxUploadedImage.Image.Width * pictureBoxUploadedImage.Image.Height);
+
+                channelOutput = _simpleChannel.AddNoise(encoderOutput, headerSize);
+                string decoderOutput = _convolutionalDecoder.Decode(channelOutput);
+
+                pictureBoxDecoderOutput.Image = BitUtils.BinaryStringToImage(decoderOutput);
+            }
+            else
+            {
+                channelOutput = _simpleChannel.AddNoise(encoderOutput, 0);
+                string decoderOutput = _convolutionalDecoder.Decode(channelOutput);
+
+                textBoxTextFromDecoder.Text = BitUtils.BinaryStringToString(decoderOutput);
+            }
+        }
+
+        private void GetChannelResult(string binaryUserInput)
+        {
+            string channelOutput = "";
+            if (radioButtonImage.Checked)
+            {
+                int headerSize =
+                    binaryUserInput.Length -
+                    Image.GetPixelFormatSize(pictureBoxUploadedImage.Image.PixelFormat) * (pictureBoxUploadedImage.Image.Width * pictureBoxUploadedImage.Image.Height);
+
+                channelOutput = _simpleChannel.AddNoise(binaryUserInput, headerSize);
+                pictureBoxChannelOutput.Image = BitUtils.BinaryStringToImage(channelOutput);
+            }
+            else
+            {
+                channelOutput = _simpleChannel.AddNoise(binaryUserInput, 0);
+                textBoxTextFromChannel.Text = BitUtils.BinaryStringToString(channelOutput);
+            }
+        }
+        */
+        private void ButtonEncode_Click(object sender, EventArgs e)
         {
             textBoxDecoderOutput.Text = String.Empty;
             textBoxChannelOutput.Text = String.Empty;
             buttonShowMistakes.Enabled = false;
 
-            string error = Validate(textBoxEncoderInput.Text.Trim());
+            string error = ValidateBinary(textBoxEncoderInput.Text.Trim());
             if(error != null)
             {
                 textBoxEncoderOutput.Text =
@@ -46,23 +140,26 @@ namespace KodavimoTeorijaA15
                     error;
 
                 return;
-            }
-
-            buttonShowMistakes.Enabled = true;
-
+            }         
+            
             string encodedText = _convolutionalEncoder.Encode(textBoxEncoderInput.Text.Trim());    
             textBoxEncoderOutput.Text = encodedText;
 
-            _simpleChannel.SetNoiseLevel((int)numericUpDownNoiseLevel.Value);
-            textBoxChannelOutput.Text = _simpleChannel.AddNoise(encodedText.Trim());
-         
             if (checkBoxDebug.Checked)
             {
                 Console.WriteLine("---------------------------------------------------------------------------");
             }
         }
 
-        private string Validate(string text)
+        private void ButtonSendToChannel_Click(object sender, EventArgs e)
+        {
+            _simpleChannel.SetNoiseLevel((double)numericUpDownNoiseLevel.Value);
+            textBoxChannelOutput.Text = _simpleChannel.AddNoise(textBoxEncoderOutput.Text.Trim(), 0);
+
+            buttonShowMistakes.Enabled = true;
+        }
+
+        private string ValidateBinary(string text)
         {
             if(text == null || text == "")
             {
@@ -84,7 +181,7 @@ namespace KodavimoTeorijaA15
         {
             buttonShowMistakes.Enabled = false;
 
-            string error = Validate(textBoxChannelOutput.Text.Trim());
+            string error = ValidateBinary(textBoxChannelOutput.Text.Trim());
             if (error != null)
             {
                 textBoxDecoderOutput.Text = 
@@ -116,6 +213,20 @@ namespace KodavimoTeorijaA15
             }
         }
 
+        private void buttonRunBinary_Click(object sender, EventArgs e)
+        {
+            if (textBoxEncoderInput.Text.Trim() == String.Empty)
+            {
+                MessageBox.Show("Encoder input cannot be empty");
+                return;
+            }
+
+            ButtonEncode_Click(sender, e);
+            ButtonSendToChannel_Click(sender, e);
+            ButtonDecode_Click(sender, e);
+            buttonShowMistakes_Click(sender, e);
+        }
+
         private void CheckBoxDebug_CheckedChanged(object sender, EventArgs e)
         {
             _convolutionalEncoder.EnableDebug(checkBoxDebug.Checked);
@@ -139,6 +250,9 @@ namespace KodavimoTeorijaA15
             }
         }
 
+        /// <summary>
+        /// Pažymi klaidas, kurios atsirado enkoderio išeities reikšmei išėjus iš kanalo.
+        /// </summary>
         private void HighlightChannelOutputMistakes()
         {
             int mistakes = 0;
@@ -171,6 +285,9 @@ namespace KodavimoTeorijaA15
             }
         }
 
+        /// <summary>
+        /// Pažymi reikšmes, kurios atsirado reikšmei išėjus iš dekoderio (lyginant su enkoderio įeitimi).
+        /// </summary>
         private void HighlightDecoderOutputMistakes()
         {
             int mistakes = 0;
@@ -202,5 +319,22 @@ namespace KodavimoTeorijaA15
                 Console.WriteLine("Mistakes found after decoding: " + mistakes);
             }
         }
+
+        private void ButtonUploadImage_Click(object sender, EventArgs e)
+        {           
+            OpenFileDialog open = new OpenFileDialog();
+            open.Filter = "Image Files(*.bmp)|*.bmp";
+            if (open.ShowDialog() == DialogResult.OK)
+            {
+                if (pictureBoxUploadedImage.Image != null)
+                {
+                    pictureBoxDecoderOutput.Image = null;
+                    pictureBoxChannelOutput.Image = null;
+                }
+
+                pictureBoxUploadedImage.Image = new Bitmap(open.FileName);
+                pictureBoxUploadedImage.Text = open.FileName;
+            }
+        }     
     }
 }

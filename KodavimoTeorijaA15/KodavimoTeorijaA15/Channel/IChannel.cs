@@ -9,6 +9,7 @@ namespace KodavimoTeorijaA15.Channel
     interface IChannel
     {
         string AddNoise(string text);
+        string AddNoise(string text, int beginIndex);
         void SetNoiseLevel(double percentage);
     }
 }

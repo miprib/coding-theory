@@ -32,9 +32,7 @@ namespace KodavimoTeorijaA15.Encoding
 
             foreach(char bit in text)
             {            
-                sb.Append(bit); // Pirmas užkodavimo bitas yra input bito kopija
-               
-                //MoveRegisters(bit); // Pirmiausia išstumiame pirmą input bitą į viršutinį registrą
+                sb.Append(bit); // Pirmas užkodavimo bitas yra input bito kopija        
 
                 // Antras užkodavimo bitas yra gaunamas sumuojant 2, 5, 6 registrus ir ipnut bitą
                 char result = 
@@ -43,7 +41,7 @@ namespace KodavimoTeorijaA15.Encoding
                           BitUtils.AddMod2(_registers[5], bit)
                     );
 
-                MoveRegisters(bit); // Pirmiausia išstumiame pirmą input bitą į viršutinį registrą
+                MoveRegisters(bit); // Įstumiame pirmą input bitą į viršutinį registrą
 
                 sb.Append(result);            
             }

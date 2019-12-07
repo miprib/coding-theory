@@ -43,7 +43,6 @@ namespace KodavimoTeorijaA15.Decoding
 
                 char outBit = _upperRegisters[5];
 
-                //MoveUpperRegisters(_bit1); // Pirmiausia išstumiame pirmą input bitą į viršutinį registrą
                 // Sudedami 2, 5, 6 viršutiniai registrai ir abu input bitai
                 char upperSum =
                     BitUtils.AddMod2(
@@ -51,7 +50,7 @@ namespace KodavimoTeorijaA15.Decoding
                         BitUtils.AddMod2(_upperRegisters[5], BitUtils.AddMod2(_bit1, _bit2))
                     );
 
-                MoveUpperRegisters(_bit1); // Pirmiausia išstumiame pirmą input bitą į viršutinį registrą
+                MoveUpperRegisters(_bit1); // Įstumiame pirmą input bitą į viršutinį registrą
 
                 // Kai praeiname užkodavime pridėtus nulinius bitus, pradedame išsaugoti dekoduotas reikšmes
                 if (i >= 6)
