@@ -42,7 +42,7 @@ namespace KodavimoTeorijaA15
 
             string binaryUserInput = BitUtils.ImageToBinaryString(pictureBoxUploadedImage.Image);
 
-            // ---------------------------------
+            // Užkodavimas, siuntimas kanalu ir dekodavimas ---------------------------------
             string encoderOutput = _convolutionalEncoder.Encode(binaryUserInput);
 
             _simpleChannel.SetNoiseLevel((double)numericUpDownNoiseLevel.Value);
@@ -51,13 +51,14 @@ namespace KodavimoTeorijaA15
                 binaryUserInput.Length -
                 Image.GetPixelFormatSize(pictureBoxUploadedImage.Image.PixelFormat) * (pictureBoxUploadedImage.Image.Width * pictureBoxUploadedImage.Image.Height);
 
-            string channelOutput = _simpleChannel.AddNoise(encoderOutput, headerSize);
+            // Pagal sąsūkos kodą užkodavus pranešimą jo ilgis yra 2k + 12, todėl atitinkamai headerio dydis pailgėja taip pat.
+            string channelOutput = _simpleChannel.AddNoise(encoderOutput, (headerSize + 1) * 2 + 12);
             string decoderOutput = _convolutionalDecoder.Decode(channelOutput);
 
             pictureBoxDecoderOutput.Image = BitUtils.BinaryStringToImage(decoderOutput);
 
-            // -----------------------------------
-            channelOutput = _simpleChannel.AddNoise(binaryUserInput, headerSize);
+            // Tik siuntimas kanalu ---------------------------------------------------------
+            channelOutput = _simpleChannel.AddNoise(binaryUserInput, headerSize + 1);
             pictureBoxChannelOutput.Image = BitUtils.BinaryStringToImage(channelOutput);
         }
 
@@ -65,7 +66,7 @@ namespace KodavimoTeorijaA15
         {
             string binaryUserInput = BitUtils.StringToBinaryString(textBoxUserInput.Text);
 
-            //-----------
+            // Užkodavimas, siuntimas kanalu ir dekodavimas ---------------------------------
             string encoderOutput = _convolutionalEncoder.Encode(binaryUserInput);
 
             _simpleChannel.SetNoiseLevel((double)numericUpDownNoiseLevel.Value);
@@ -74,56 +75,11 @@ namespace KodavimoTeorijaA15
 
             textBoxTextFromDecoder.Text = BitUtils.BinaryStringToString(decoderOutput);
 
-            //-----------
+            // Tik siuntimas kanalu ---------------------------------------------------------
             channelOutput = _simpleChannel.AddNoise(binaryUserInput, 0);
             textBoxTextFromChannel.Text = BitUtils.BinaryStringToString(channelOutput);
         }
-        /*
-        private void GetFullResult(string binaryUserInput)
-        {
-            string encoderOutput = _convolutionalEncoder.Encode(binaryUserInput);
-
-            _simpleChannel.SetNoiseLevel((int)numericUpDownNoiseLevel.Value);
-            string channelOutput = "";
-            if (radioButtonImage.Checked)
-            {
-                int headerSize =
-                    binaryUserInput.Length -
-                    Image.GetPixelFormatSize(pictureBoxUploadedImage.Image.PixelFormat) * (pictureBoxUploadedImage.Image.Width * pictureBoxUploadedImage.Image.Height);
-
-                channelOutput = _simpleChannel.AddNoise(encoderOutput, headerSize);
-                string decoderOutput = _convolutionalDecoder.Decode(channelOutput);
-
-                pictureBoxDecoderOutput.Image = BitUtils.BinaryStringToImage(decoderOutput);
-            }
-            else
-            {
-                channelOutput = _simpleChannel.AddNoise(encoderOutput, 0);
-                string decoderOutput = _convolutionalDecoder.Decode(channelOutput);
-
-                textBoxTextFromDecoder.Text = BitUtils.BinaryStringToString(decoderOutput);
-            }
-        }
-
-        private void GetChannelResult(string binaryUserInput)
-        {
-            string channelOutput = "";
-            if (radioButtonImage.Checked)
-            {
-                int headerSize =
-                    binaryUserInput.Length -
-                    Image.GetPixelFormatSize(pictureBoxUploadedImage.Image.PixelFormat) * (pictureBoxUploadedImage.Image.Width * pictureBoxUploadedImage.Image.Height);
-
-                channelOutput = _simpleChannel.AddNoise(binaryUserInput, headerSize);
-                pictureBoxChannelOutput.Image = BitUtils.BinaryStringToImage(channelOutput);
-            }
-            else
-            {
-                channelOutput = _simpleChannel.AddNoise(binaryUserInput, 0);
-                textBoxTextFromChannel.Text = BitUtils.BinaryStringToString(channelOutput);
-            }
-        }
-        */
+ 
         private void ButtonEncode_Click(object sender, EventArgs e)
         {
             textBoxDecoderOutput.Text = String.Empty;
@@ -221,10 +177,48 @@ namespace KodavimoTeorijaA15
                 return;
             }
 
+            
             ButtonEncode_Click(sender, e);
             ButtonSendToChannel_Click(sender, e);
             ButtonDecode_Click(sender, e);
             buttonShowMistakes_Click(sender, e);
+
+            /*
+            // Eksperimentas
+            for (int outerLoopCount = 1; outerLoopCount <= 100; outerLoopCount++)
+            {
+                _simpleChannel.SetNoiseLevel(outerLoopCount);
+
+                double mistakesAfterChannel = 0;
+                double mistakesAfterDecoding = 0;
+
+                for (int j = 1; j <= 1000; j++)
+                {
+                    ButtonEncode_Click(sender, e);
+                    ButtonSendToChannel_Click(sender, e);
+                    ButtonDecode_Click(sender, e);
+                    //buttonShowMistakes_Click(sender, e);
+
+                    for (int i = 0; i < textBoxDecoderOutput.Text.Length; i++)
+                    {
+                        if (textBoxDecoderOutput.Text[i] != textBoxEncoderInput.Text[i])
+                        {
+                            mistakesAfterDecoding++;
+                        }
+                    }
+
+                    for (int i = 0; i < textBoxChannelOutput.Text.Length; i++)
+                    {
+                        if (textBoxChannelOutput.Text[i] != textBoxEncoderOutput.Text[i])
+                        {
+                            mistakesAfterChannel++;
+                        }
+                    }
+                }
+
+                Console.WriteLine(outerLoopCount + ";" + mistakesAfterChannel/1000 + ";" + mistakesAfterDecoding/1000 + ";");
+            }
+            */
         }
 
         private void CheckBoxDebug_CheckedChanged(object sender, EventArgs e)

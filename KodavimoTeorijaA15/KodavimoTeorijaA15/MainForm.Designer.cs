@@ -34,6 +34,7 @@
             this.textBoxChannelOutput = new System.Windows.Forms.RichTextBox();
             this.textBoxDecoderOutput = new System.Windows.Forms.RichTextBox();
             this.groupBoxBinary = new System.Windows.Forms.GroupBox();
+            this.buttonRunBinary = new System.Windows.Forms.Button();
             this.buttonSendToChannel = new System.Windows.Forms.Button();
             this.buttonShowMistakes = new System.Windows.Forms.Button();
             this.numericUpDownNoiseLevel = new System.Windows.Forms.NumericUpDown();
@@ -63,7 +64,11 @@
             this.groupBoxText = new System.Windows.Forms.GroupBox();
             this.labelUserInputText = new System.Windows.Forms.Label();
             this.buttonRunText = new System.Windows.Forms.Button();
-            this.buttonRunBinary = new System.Windows.Forms.Button();
+            this.tabControlInputType = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBoxSettings = new System.Windows.Forms.GroupBox();
             this.groupBoxBinary.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNoiseLevel)).BeginInit();
             this.groupBoxImage.SuspendLayout();
@@ -71,6 +76,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDecoderOutput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxChannelOutput)).BeginInit();
             this.groupBoxText.SuspendLayout();
+            this.tabControlInputType.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.groupBoxSettings.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonDecode
@@ -126,8 +136,6 @@
             this.groupBoxBinary.Controls.Add(this.buttonRunBinary);
             this.groupBoxBinary.Controls.Add(this.buttonSendToChannel);
             this.groupBoxBinary.Controls.Add(this.buttonShowMistakes);
-            this.groupBoxBinary.Controls.Add(this.numericUpDownNoiseLevel);
-            this.groupBoxBinary.Controls.Add(this.labelNoiseLevel);
             this.groupBoxBinary.Controls.Add(this.checkBoxDebug);
             this.groupBoxBinary.Controls.Add(this.labelEncoderOutput);
             this.groupBoxBinary.Controls.Add(this.textBoxEncoderOutput);
@@ -141,13 +149,23 @@
             this.groupBoxBinary.Controls.Add(this.buttonDecode);
             this.groupBoxBinary.Controls.Add(this.buttonEncode);
             this.groupBoxBinary.Controls.Add(this.textBoxEncoderInput);
-            this.groupBoxBinary.Location = new System.Drawing.Point(12, 616);
+            this.groupBoxBinary.Location = new System.Drawing.Point(6, 7);
             this.groupBoxBinary.Name = "groupBoxBinary";
             this.groupBoxBinary.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.groupBoxBinary.Size = new System.Drawing.Size(1292, 438);
             this.groupBoxBinary.TabIndex = 5;
             this.groupBoxBinary.TabStop = false;
             this.groupBoxBinary.Text = "Binary";
+            // 
+            // buttonRunBinary
+            // 
+            this.buttonRunBinary.Location = new System.Drawing.Point(6, 199);
+            this.buttonRunBinary.Name = "buttonRunBinary";
+            this.buttonRunBinary.Size = new System.Drawing.Size(291, 23);
+            this.buttonRunBinary.TabIndex = 18;
+            this.buttonRunBinary.Text = "Run";
+            this.buttonRunBinary.UseVisualStyleBackColor = true;
+            this.buttonRunBinary.Click += new System.EventHandler(this.buttonRunBinary_Click);
             // 
             // buttonSendToChannel
             // 
@@ -178,15 +196,15 @@
             0,
             0,
             393216});
-            this.numericUpDownNoiseLevel.Location = new System.Drawing.Point(424, 202);
+            this.numericUpDownNoiseLevel.Location = new System.Drawing.Point(127, 19);
             this.numericUpDownNoiseLevel.Name = "numericUpDownNoiseLevel";
-            this.numericUpDownNoiseLevel.Size = new System.Drawing.Size(209, 20);
+            this.numericUpDownNoiseLevel.Size = new System.Drawing.Size(86, 20);
             this.numericUpDownNoiseLevel.TabIndex = 15;
             // 
             // labelNoiseLevel
             // 
             this.labelNoiseLevel.AutoSize = true;
-            this.labelNoiseLevel.Location = new System.Drawing.Point(303, 204);
+            this.labelNoiseLevel.Location = new System.Drawing.Point(6, 21);
             this.labelNoiseLevel.Name = "labelNoiseLevel";
             this.labelNoiseLevel.Size = new System.Drawing.Size(115, 13);
             this.labelNoiseLevel.TabIndex = 13;
@@ -277,16 +295,16 @@
             this.groupBoxImage.Controls.Add(this.pictureBoxDecoderOutput);
             this.groupBoxImage.Controls.Add(this.pictureBoxChannelOutput);
             this.groupBoxImage.Controls.Add(this.buttonRunImage);
-            this.groupBoxImage.Location = new System.Drawing.Point(12, 12);
+            this.groupBoxImage.Location = new System.Drawing.Point(6, 8);
             this.groupBoxImage.Name = "groupBoxImage";
-            this.groupBoxImage.Size = new System.Drawing.Size(1292, 340);
+            this.groupBoxImage.Size = new System.Drawing.Size(1292, 441);
             this.groupBoxImage.TabIndex = 17;
             this.groupBoxImage.TabStop = false;
             this.groupBoxImage.Text = "Image";
             // 
             // buttonUploadImage
             // 
-            this.buttonUploadImage.Location = new System.Drawing.Point(6, 311);
+            this.buttonUploadImage.Location = new System.Drawing.Point(9, 412);
             this.buttonUploadImage.Name = "buttonUploadImage";
             this.buttonUploadImage.Size = new System.Drawing.Size(630, 23);
             this.buttonUploadImage.TabIndex = 15;
@@ -308,7 +326,7 @@
             this.pictureBoxUploadedImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxUploadedImage.Location = new System.Drawing.Point(9, 32);
             this.pictureBoxUploadedImage.Name = "pictureBoxUploadedImage";
-            this.pictureBoxUploadedImage.Size = new System.Drawing.Size(412, 273);
+            this.pictureBoxUploadedImage.Size = new System.Drawing.Size(412, 374);
             this.pictureBoxUploadedImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxUploadedImage.TabIndex = 13;
             this.pictureBoxUploadedImage.TabStop = false;
@@ -336,7 +354,7 @@
             this.pictureBoxDecoderOutput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxDecoderOutput.Location = new System.Drawing.Point(871, 32);
             this.pictureBoxDecoderOutput.Name = "pictureBoxDecoderOutput";
-            this.pictureBoxDecoderOutput.Size = new System.Drawing.Size(414, 273);
+            this.pictureBoxDecoderOutput.Size = new System.Drawing.Size(414, 374);
             this.pictureBoxDecoderOutput.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxDecoderOutput.TabIndex = 10;
             this.pictureBoxDecoderOutput.TabStop = false;
@@ -346,14 +364,14 @@
             this.pictureBoxChannelOutput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBoxChannelOutput.Location = new System.Drawing.Point(439, 32);
             this.pictureBoxChannelOutput.Name = "pictureBoxChannelOutput";
-            this.pictureBoxChannelOutput.Size = new System.Drawing.Size(415, 273);
+            this.pictureBoxChannelOutput.Size = new System.Drawing.Size(415, 374);
             this.pictureBoxChannelOutput.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxChannelOutput.TabIndex = 9;
             this.pictureBoxChannelOutput.TabStop = false;
             // 
             // buttonRunImage
             // 
-            this.buttonRunImage.Location = new System.Drawing.Point(655, 311);
+            this.buttonRunImage.Location = new System.Drawing.Point(655, 412);
             this.buttonRunImage.Name = "buttonRunImage";
             this.buttonRunImage.Size = new System.Drawing.Size(630, 23);
             this.buttonRunImage.TabIndex = 4;
@@ -377,7 +395,7 @@
             this.textBoxTextFromChannel.Name = "textBoxTextFromChannel";
             this.textBoxTextFromChannel.ReadOnly = true;
             this.textBoxTextFromChannel.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxTextFromChannel.Size = new System.Drawing.Size(415, 185);
+            this.textBoxTextFromChannel.Size = new System.Drawing.Size(415, 376);
             this.textBoxTextFromChannel.TabIndex = 7;
             // 
             // labelTextFromChannel
@@ -396,7 +414,7 @@
             this.textBoxTextFromDecoder.Name = "textBoxTextFromDecoder";
             this.textBoxTextFromDecoder.ReadOnly = true;
             this.textBoxTextFromDecoder.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxTextFromDecoder.Size = new System.Drawing.Size(415, 185);
+            this.textBoxTextFromDecoder.Size = new System.Drawing.Size(415, 376);
             this.textBoxTextFromDecoder.TabIndex = 5;
             // 
             // textBoxUserInput
@@ -405,7 +423,7 @@
             this.textBoxUserInput.Multiline = true;
             this.textBoxUserInput.Name = "textBoxUserInput";
             this.textBoxUserInput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxUserInput.Size = new System.Drawing.Size(415, 185);
+            this.textBoxUserInput.Size = new System.Drawing.Size(415, 376);
             this.textBoxUserInput.TabIndex = 0;
             // 
             // groupBoxText
@@ -417,9 +435,9 @@
             this.groupBoxText.Controls.Add(this.textBoxTextFromDecoder);
             this.groupBoxText.Controls.Add(this.labelTextFromChannel);
             this.groupBoxText.Controls.Add(this.labelTextFromDecoder);
-            this.groupBoxText.Location = new System.Drawing.Point(12, 358);
+            this.groupBoxText.Location = new System.Drawing.Point(6, 6);
             this.groupBoxText.Name = "groupBoxText";
-            this.groupBoxText.Size = new System.Drawing.Size(1292, 252);
+            this.groupBoxText.Size = new System.Drawing.Size(1292, 443);
             this.groupBoxText.TabIndex = 18;
             this.groupBoxText.TabStop = false;
             this.groupBoxText.Text = "Text";
@@ -435,7 +453,7 @@
             // 
             // buttonRunText
             // 
-            this.buttonRunText.Location = new System.Drawing.Point(6, 223);
+            this.buttonRunText.Location = new System.Drawing.Point(6, 414);
             this.buttonRunText.Name = "buttonRunText";
             this.buttonRunText.Size = new System.Drawing.Size(1280, 23);
             this.buttonRunText.TabIndex = 8;
@@ -443,24 +461,68 @@
             this.buttonRunText.UseVisualStyleBackColor = true;
             this.buttonRunText.Click += new System.EventHandler(this.ButtonRunText_Click);
             // 
-            // buttonRunBinary
+            // tabControlInputType
             // 
-            this.buttonRunBinary.Location = new System.Drawing.Point(6, 199);
-            this.buttonRunBinary.Name = "buttonRunBinary";
-            this.buttonRunBinary.Size = new System.Drawing.Size(291, 23);
-            this.buttonRunBinary.TabIndex = 18;
-            this.buttonRunBinary.Text = "Run";
-            this.buttonRunBinary.UseVisualStyleBackColor = true;
-            this.buttonRunBinary.Click += new System.EventHandler(this.buttonRunBinary_Click);
+            this.tabControlInputType.Controls.Add(this.tabPage1);
+            this.tabControlInputType.Controls.Add(this.tabPage2);
+            this.tabControlInputType.Controls.Add(this.tabPage3);
+            this.tabControlInputType.Location = new System.Drawing.Point(12, 12);
+            this.tabControlInputType.Name = "tabControlInputType";
+            this.tabControlInputType.SelectedIndex = 0;
+            this.tabControlInputType.Size = new System.Drawing.Size(1312, 481);
+            this.tabControlInputType.TabIndex = 19;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.groupBoxImage);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(1304, 455);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Image";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.groupBoxText);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(1304, 455);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Text";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.groupBoxBinary);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(1304, 455);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Binary";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxSettings
+            // 
+            this.groupBoxSettings.Controls.Add(this.labelNoiseLevel);
+            this.groupBoxSettings.Controls.Add(this.numericUpDownNoiseLevel);
+            this.groupBoxSettings.Location = new System.Drawing.Point(12, 499);
+            this.groupBoxSettings.Name = "groupBoxSettings";
+            this.groupBoxSettings.Size = new System.Drawing.Size(1312, 100);
+            this.groupBoxSettings.TabIndex = 20;
+            this.groupBoxSettings.TabStop = false;
+            this.groupBoxSettings.Text = "Settings";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1316, 1053);
-            this.Controls.Add(this.groupBoxText);
-            this.Controls.Add(this.groupBoxImage);
-            this.Controls.Add(this.groupBoxBinary);
+            this.ClientSize = new System.Drawing.Size(1336, 621);
+            this.Controls.Add(this.groupBoxSettings);
+            this.Controls.Add(this.tabControlInputType);
             this.Name = "MainForm";
             this.Text = "Direct Convolutional Code";
             this.groupBoxBinary.ResumeLayout(false);
@@ -473,6 +535,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxChannelOutput)).EndInit();
             this.groupBoxText.ResumeLayout(false);
             this.groupBoxText.PerformLayout();
+            this.tabControlInputType.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.groupBoxSettings.ResumeLayout(false);
+            this.groupBoxSettings.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -515,6 +583,11 @@
         private System.Windows.Forms.Label labelUserInputText;
         private System.Windows.Forms.Button buttonSendToChannel;
         private System.Windows.Forms.Button buttonRunBinary;
+        private System.Windows.Forms.TabControl tabControlInputType;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.GroupBox groupBoxSettings;
     }
 }
 

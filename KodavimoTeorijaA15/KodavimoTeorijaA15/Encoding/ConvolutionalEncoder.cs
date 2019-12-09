@@ -32,7 +32,7 @@ namespace KodavimoTeorijaA15.Encoding
 
             foreach(char bit in text)
             {            
-                sb.Append(bit); // Pirmas užkodavimo bitas yra input bito kopija        
+                sb.Append(bit); // Pirmas užkodavimo bitas yra input bito kopija  
 
                 // Antras užkodavimo bitas yra gaunamas sumuojant 2, 5, 6 registrus ir ipnut bitą
                 char result = 
@@ -60,13 +60,13 @@ namespace KodavimoTeorijaA15.Encoding
         /// <param name="bit">Naujai atėjęs bitas</param>
         private void MoveRegisters(char bit)
         {
-            Array.Copy(_registers, 0, _registers, 1, 5);
-            _registers[0] = bit;
-
             if (_debuggingIsEnabled)
-            { 
+            {
                 PrintRegisters();
             }
+
+            Array.Copy(_registers, 0, _registers, 1, 5);
+            _registers[0] = bit;         
         }
 
         private void PrintRegisters()

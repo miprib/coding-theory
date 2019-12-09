@@ -25,7 +25,7 @@ namespace KodavimoTeorijaA15.Decoding
         }
 
         /// <summary>
-        /// Dekoduoja dvejetainiu formatu pateikiamą užkoduotą pranešimą pagal tiesioginį sąsūkos kodą.
+        /// Dekoduoja dvejetainiu formatu pateikiamą tiesioginio sąsūkos kodo užkoduotą pranešimą tiesioginiu būdu.
         /// </summary>
         /// <param name="text">Užkoduotas pranešimas dvejetainiu formatu</param>
         /// <returns>Dekoduotas pranešimas dvejetainiu formatu</returns>
@@ -41,28 +41,30 @@ namespace KodavimoTeorijaA15.Decoding
                 _bit1 = bitPairs[i][0];
                 _bit2 = bitPairs[i][1];
 
-                char outBit = _upperRegisters[5];
+                //char outBit = _upperRegisters[5];
 
-                // Sudedami 2, 5, 6 viršutiniai registrai ir abu input bitai
+                // Sudedami 2, 5, 6 viršutiniai registrai ir abu input bitai            
                 char upperSum =
                     BitUtils.AddMod2(
                         BitUtils.AddMod2(_upperRegisters[1], _upperRegisters[4]),
                         BitUtils.AddMod2(_upperRegisters[5], BitUtils.AddMod2(_bit1, _bit2))
                     );
 
-                MoveUpperRegisters(_bit1); // Įstumiame pirmą input bitą į viršutinį registrą
+                
 
                 // Kai praeiname užkodavime pridėtus nulinius bitus, pradedame išsaugoti dekoduotas reikšmes
                 if (i >= 6)
                 {
-                    sb.Append(BitUtils.AddMod2(outBit, MDE(upperSum)));
+                    sb.Append(BitUtils.AddMod2(_upperRegisters[5], MDE(upperSum)));
                 }
 
-                // Apatinius registrus perstumiame pačiame iteracijos gale
+                // Registrus perstumiame iteracijos pabaigoje
+                MoveUpperRegisters(_bit1); // Įstumiame pirmą input bitą į viršutinį registrą            
                 MoveLowerRegisters(upperSum);
 
                 if (_debuggingIsEnabled)
                 {
+                    Console.WriteLine("upperSum: " + upperSum);
                     Console.WriteLine();
                 }
             }        
@@ -73,7 +75,7 @@ namespace KodavimoTeorijaA15.Decoding
         /// Suranda MDE (majority-decision element). Balsuoja 1, 4, 6 apatiniai registrai ir iš viršaus atėjusi suma.
         /// </summary>
         /// <param name="upperSum">Iš viršaus atėjusi reikšmė</param>
-        /// <returns>1, jei 2 arba daugiau balsuotojų lygūs 1</returns>
+        /// <returns>1, jei 3 arba daugiau balsuotojų lygūs 1</returns>
         private char MDE(char upperSum)
         {
             char[] voters = {_lowerRegisters[0], _lowerRegisters[3], _lowerRegisters[5], upperSum};
@@ -118,10 +120,7 @@ namespace KodavimoTeorijaA15.Decoding
         /// </summary>
         /// <param name="bit">Naujai atėjęs bitas</param>
         private void MoveUpperRegisters(char bit)
-        {         
-            Array.Copy(_upperRegisters, 0, _upperRegisters, 1, 5);
-            _upperRegisters[0] = bit;
-
+        {                   
             if (_debuggingIsEnabled)
             {
                 PrintUpperRegisters();
@@ -135,6 +134,9 @@ namespace KodavimoTeorijaA15.Decoding
                     _bit2
                 );
             }
+
+            Array.Copy(_upperRegisters, 0, _upperRegisters, 1, 5);
+            _upperRegisters[0] = bit;
         }
 
         /// <summary>
@@ -143,13 +145,13 @@ namespace KodavimoTeorijaA15.Decoding
         /// <param name="bit">Naujai atėjęs bitas</param>
         private void MoveLowerRegisters(char bit)
         {
-            Array.Copy(_lowerRegisters, 0, _lowerRegisters, 1, 5);
-            _lowerRegisters[0] = bit;
-
             if (_debuggingIsEnabled)
             {
                 PrintLowerRegisters();
             }
+
+            Array.Copy(_lowerRegisters, 0, _lowerRegisters, 1, 5);
+            _lowerRegisters[0] = bit;           
         }
 
         private void PrintUpperRegisters()
